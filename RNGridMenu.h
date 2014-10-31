@@ -117,7 +117,7 @@ typedef NS_ENUM(NSInteger, RNGridMenuStyle) {
 - (instancetype)initWithTitles:(NSArray *)titles;
 
 // Show the menu
-- (void)showInViewController:(UIViewController *)parentViewController center:(CGPoint)center;
+- (void)showInViewController:(UIViewController *)parentViewController;
 
 // Dismiss the menu
 // This is called when the window is tapped. If tapped inside the view an item will be selected.

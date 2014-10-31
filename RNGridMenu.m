@@ -26,7 +26,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         sumY += location.y;
     }
 
-    return CGPointMake((CGFloat)round(sumX / touches.count), (CGFloat)round(sumY / touches.count));
+    return CGPointMake((CGFloat) round(sumX / touches.count), (CGFloat) round(sumY / touches.count));
 }
 
 #pragma mark - Categories
@@ -54,12 +54,12 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
     [self.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     // helps w/ our colors when blurring
     // feel free to adjust jpeg quality (lower = higher perf)
     NSData *imageData = UIImageJPEGRepresentation(image, 0.55);
     image = [UIImage imageWithData:imageData];
-    
+
     return image;
 }
 
@@ -68,12 +68,12 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
 
 @implementation UIImage (Blur)
 
--(UIImage *)rn_boxblurImageWithBlur:(CGFloat)blur exclusionPath:(UIBezierPath *)exclusionPath {
+- (UIImage *)rn_boxblurImageWithBlur:(CGFloat)blur exclusionPath:(UIBezierPath *)exclusionPath {
     if (blur < 0.f || blur > 1.f) {
         blur = 0.5f;
     }
 
-    int boxSize = (int)(blur * 40);
+    int boxSize = (int) (blur * 40);
     boxSize = boxSize - (boxSize % 2) + 1;
 
     CGImageRef img = self.CGImage;
@@ -85,7 +85,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
     UIImage *unblurredImage = nil;
     if (exclusionPath != nil) {
         CAShapeLayer *maskLayer = [CAShapeLayer new];
-        maskLayer.frame = (CGRect){CGPointZero, self.size};
+        maskLayer.frame = (CGRect) {CGPointZero, self.size};
         maskLayer.backgroundColor = [UIColor blackColor].CGColor;
         maskLayer.fillColor = [UIColor whiteColor].CGColor;
         maskLayer.path = exclusionPath.CGPath;
@@ -120,12 +120,12 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
     inBuffer.height = CGImageGetHeight(img);
     inBuffer.rowBytes = CGImageGetBytesPerRow(img);
 
-    inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
+    inBuffer.data = (void *) CFDataGetBytePtr(inBitmapData);
 
     //create vImage_Buffer for output
     pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
 
-    if(pixelBuffer == NULL)
+    if (pixelBuffer == NULL)
         NSLog(@"No pixelbuffer");
 
     outBuffer.data = pixelBuffer;
@@ -152,12 +152,12 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
-                                             outBuffer.width,
-                                             outBuffer.height,
-                                             8,
-                                             outBuffer.rowBytes,
-                                             colorSpace,
-                                             kCGImageAlphaNoneSkipLast);
+            outBuffer.width,
+            outBuffer.height,
+            8,
+            outBuffer.rowBytes,
+            colorSpace,
+            kCGImageAlphaNoneSkipLast);
     CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
     UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
 
@@ -189,9 +189,9 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
 
 @interface RNMenuItemView : UIView
 
-@property (nonatomic, strong) UIImageView *imageView;
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, assign) NSInteger itemIndex;
+@property(nonatomic, strong) UIImageView *imageView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, assign) NSInteger itemIndex;
 
 @end
 
@@ -229,7 +229,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         CGFloat height = CGRectGetHeight(frame);
         if (hasText) {
             y = inset / 2;
-            height = floorf(CGRectGetHeight(frame) * 2/3.f);
+            height = floorf(CGRectGetHeight(frame) * 2 / 3.f);
         }
         self.imageView.frame = CGRectInset(CGRectMake(0, y, CGRectGetWidth(frame), height), inset, inset);
     }
@@ -242,7 +242,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         CGFloat height = CGRectGetHeight(frame);
         CGFloat left = 0;
         if (hasImage) {
-            y = floorf(CGRectGetHeight(frame) * 2/3.f) - inset / 2;
+            y = floorf(CGRectGetHeight(frame) * 2 / 3.f) - inset / 2;
             height = floorf(CGRectGetHeight(frame) / 3.f);
         }
         if (self.titleLabel.textAlignment == NSTextAlignmentLeft) {
@@ -316,11 +316,10 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
 
 @interface RNGridMenu ()
 
-@property (nonatomic, assign) CGPoint menuCenter;
-@property (nonatomic, strong) NSMutableArray *itemViews;
-@property (nonatomic, strong) RNMenuItemView *selectedItemView;
-@property (nonatomic, strong) UIView *blurView;
-@property (nonatomic, assign) BOOL parentViewCouldScroll;
+@property(nonatomic, strong) NSMutableArray *itemViews;
+@property(nonatomic, strong) RNMenuItemView *selectedItemView;
+@property(nonatomic, strong) UIView *blurView;
+@property(nonatomic, assign) BOOL parentViewCouldScroll;
 
 @end
 
@@ -401,7 +400,7 @@ static RNGridMenu *rn_visibleGridMenu;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    id<RNGridMenuDelegate> delegate = self.delegate;
+    id <RNGridMenuDelegate> delegate = self.delegate;
 
     if (self.selectedItemView != nil) {
         RNGridMenuItem *item = self.items[self.selectedItemView.itemIndex];
@@ -488,7 +487,9 @@ static RNGridMenu *rn_visibleGridMenu;
     [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 
     if ([self isViewLoaded] && self.view.window != nil) {
-        [self createScreenshotAndLayoutWithScreenshotCompletion:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self createScreenshotAndLayoutWithScreenshotCompletion:nil];
+        });
     }
 }
 
@@ -523,7 +524,7 @@ static RNGridMenu *rn_visibleGridMenu;
     CGFloat height = self.itemSize.height * self.items.count;
     CGFloat headerOffset = CGRectGetHeight(self.headerView.bounds);
 
-    self.menuView.frame = [self menuFrameWithWidth:width height:height center:self.menuCenter headerOffset:headerOffset];
+    self.menuView.frame = [self menuFrameWithWidth:width height:height center:[self computeCenter] headerOffset:headerOffset];
 
     [self.itemViews enumerateObjectsUsingBlock:^(RNMenuItemView *itemView, NSUInteger idx, BOOL *stop) {
         itemView.frame = CGRectMake(0, idx * self.itemSize.height + headerOffset, self.itemSize.width, self.itemSize.height);
@@ -535,14 +536,14 @@ static RNGridMenu *rn_visibleGridMenu;
     NSInteger rowCount = ceilf(sqrtf(itemCount));
 
     CGFloat height = self.itemSize.height * rowCount;
-    CGFloat width = self.itemSize.width * ceilf(itemCount / (CGFloat)rowCount);
-    CGFloat itemHeight = floorf(height / (CGFloat)rowCount);
+    CGFloat width = self.itemSize.width * ceilf(itemCount / (CGFloat) rowCount);
+    CGFloat itemHeight = floorf(height / (CGFloat) rowCount);
     CGFloat headerOffset = self.headerView.bounds.size.height;
 
-    self.menuView.frame = [self menuFrameWithWidth:width height:height center:self.menuCenter headerOffset:headerOffset];
+    self.menuView.frame = [self menuFrameWithWidth:width height:height center:[self computeCenter] headerOffset:headerOffset];
 
     for (NSInteger i = 0; i < rowCount; i++) {
-        NSInteger rowLength = ceilf(itemCount / (CGFloat)rowCount);
+        NSInteger rowLength = ceilf(itemCount / (CGFloat) rowCount);
         NSInteger rowStartIndex = i * rowLength;
 
         NSInteger offset = 0;
@@ -550,7 +551,7 @@ static RNGridMenu *rn_visibleGridMenu;
             rowLength = itemCount - i * rowLength;
         }
         NSArray *subItems = [self.itemViews subarrayWithRange:NSMakeRange(rowStartIndex, rowLength)];
-        CGFloat itemWidth = floorf(width / (CGFloat)rowLength);
+        CGFloat itemWidth = floorf(width / (CGFloat) rowLength);
         [subItems enumerateObjectsUsingBlock:^(RNMenuItemView *itemView, NSUInteger idx, BOOL *stop) {
             itemView.frame = CGRectMake(idx * itemWidth, i * itemHeight + headerOffset, itemWidth, itemHeight);
         }];
@@ -563,11 +564,11 @@ static RNGridMenu *rn_visibleGridMenu;
 
         self.menuView.alpha = 0.f;
         UIImage *screenshot = ([self.parentViewController.view isKindOfClass:[UIScrollView class]] ?
-                               [self.parentViewController.view rn_screenshotForScrollViewWithContentOffset:[(UIScrollView *)self.parentViewController.view contentOffset]] :
-                               [self.parentViewController.view rn_screenshot]);        
+                [self.parentViewController.view rn_screenshotForScrollViewWithContentOffset:[(UIScrollView *) self.parentViewController.view contentOffset]] :
+                [self.parentViewController.view rn_screenshot]);
         self.menuView.alpha = 1.f;
         self.blurView.alpha = 1.f;
-        self.blurView.layer.contents = (id)screenshot.CGImage;
+        self.blurView.layer.contents = (id) screenshot.CGImage;
 
         if (screenshotCompletion != nil) {
             screenshotCompletion();
@@ -584,8 +585,9 @@ static RNGridMenu *rn_visibleGridMenu;
                 transition.type = kCATransitionFade;
 
                 [self.blurView.layer addAnimation:transition forKey:nil];
-                self.blurView.layer.contents = (id)blur.CGImage;
+                self.blurView.layer.contents = (id) blur.CGImage;
 
+                self.view.center = [self computeCenter];
                 [self.view setNeedsLayout];
                 [self.view layoutIfNeeded];
             });
@@ -595,7 +597,11 @@ static RNGridMenu *rn_visibleGridMenu;
 
 #pragma mark - Animations
 
-- (void)showInViewController:(UIViewController *)parentViewController center:(CGPoint)center {
+- (CGPoint)computeCenter {
+    return [self.view convertPoint:CGPointMake(self.parentViewController.view.bounds.size.width / 2.f, self.parentViewController.view.bounds.size.height / 2.f) toView:self.view];
+}
+
+- (void)showInViewController:(UIViewController *)parentViewController {
     NSParameterAssert(parentViewController != nil);
 
     if (rn_visibleGridMenu != nil) {
@@ -603,7 +609,6 @@ static RNGridMenu *rn_visibleGridMenu;
     }
 
     [self rn_addToParentViewController:parentViewController callingAppearanceMethods:YES];
-    self.menuCenter = [self.view convertPoint:center toView:self.view];
     self.view.frame = parentViewController.view.bounds;
 
     [self showAnimated:YES];
@@ -714,19 +719,19 @@ static RNGridMenu *rn_visibleGridMenu;
     [parentViewController.view addSubview:self.view];
     [self didMoveToParentViewController:self];
     if (callAppearanceMethods) [self endAppearanceTransition];
-    
-    if ([parentViewController.view respondsToSelector:@selector(setScrollEnabled:)] && [(UIScrollView *)parentViewController.view isScrollEnabled]) {
+
+    if ([parentViewController.view respondsToSelector:@selector(setScrollEnabled:)] && [(UIScrollView *) parentViewController.view isScrollEnabled]) {
         self.parentViewCouldScroll = YES;
-        [(UIScrollView *)parentViewController.view setScrollEnabled:NO];
+        [(UIScrollView *) parentViewController.view setScrollEnabled:NO];
     }
 }
 
 - (void)rn_removeFromParentViewControllerCallingAppearanceMethods:(BOOL)callAppearanceMethods {
     if (self.parentViewCouldScroll) {
-        [(UIScrollView *)self.parentViewController.view setScrollEnabled:YES];
+        [(UIScrollView *) self.parentViewController.view setScrollEnabled:YES];
         self.parentViewCouldScroll = NO;
     }
-    
+
     if (callAppearanceMethods) [self beginAppearanceTransition:NO animated:NO];
     [self willMoveToParentViewController:nil];
     [self.view removeFromSuperview];
@@ -739,7 +744,7 @@ static RNGridMenu *rn_visibleGridMenu;
     RNMenuItemView *selectedView = nil;
 
     if (CGRectContainsPoint(self.menuView.frame, point)) {
-        point =  [self.view convertPoint:point toView:self.menuView];
+        point = [self.view convertPoint:point toView:self.menuView];
         selectedView = [[self.itemViews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RNMenuItemView *itemView, NSDictionary *bindings) {
             return CGRectContainsPoint(itemView.frame, point);
         }]] lastObject];
@@ -767,7 +772,7 @@ static RNGridMenu *rn_visibleGridMenu;
 - (CGRect)menuFrameWithWidth:(CGFloat)width height:(CGFloat)height center:(CGPoint)center headerOffset:(CGFloat)headerOffset {
     height += headerOffset;
 
-    CGRect frame = CGRectMake(center.x - width/2.f, center.y - height/2.f, width, height);
+    CGRect frame = CGRectMake(center.x - width / 2.f, center.y - height / 2.f, width, height);
 
     CGFloat offsetX = 0.f;
     CGFloat offsetY = 0.f;
@@ -838,7 +843,7 @@ static RNGridMenu *rn_visibleGridMenu;
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
-    
+
     if (_touchesDidMove) {
         RNGridMenu *menu = [RNGridMenu visibleGridMenu];
         [menu touchesEnded:touches withEvent:event];
@@ -847,7 +852,7 @@ static RNGridMenu *rn_visibleGridMenu;
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
-    
+
     if (_touchesDidMove) {
         RNGridMenu *menu = [RNGridMenu visibleGridMenu];
         [menu touchesCancelled:touches withEvent:event];
